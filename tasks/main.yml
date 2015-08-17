@@ -14,3 +14,6 @@
 - include: logstash_configuration.yml
   tags:
    - logstash_conf
+# Install Other Generic Plugins
+- include: plugins.yml
+  when: (logstash_plugins is defined)

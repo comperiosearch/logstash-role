@@ -17,3 +17,4 @@ logstash_defaults: "LS_USER=logstash"
 
 defaults_RedHat: "/etc/sysconfig/logstash"
 defaults_Debian: "/etc/default/logstash"
+logstash_home_dir: "/opt/logstash"
