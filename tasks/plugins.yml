@@ -1,24 +1,16 @@
 # Loop though logstash_plugins and install them
 - name: Removing Plugins if they exist
   action: >
-    shell bin/plugin uninstall {{ item.name }}
-    chdir={{ logstash_home_dir }}
+    shell bin/plugin uninstall "{{ item.name }}"
+    chdir="{{ logstash_home_dir }}"
   with_items: logstash_plugins
   ignore_errors: yes
 - name: Installing Plugins by Name
   action: >
-    shell bin/plugin install {{ item.name }}
-    chdir={{ logstash_home_dir }}
-  when: item.url is not defined
+    shell bin/plugin install "{{ item.name }}"
+    chdir="{{ logstash_home_dir }}"
   with_items: logstash_plugins
-  ignore_errors: yes
-- name: Installing Plugins by URL
-  action: >
-    shell bin/plugin install {{ item.name }} -url {{ item.url }}
-    chdir={{ logstash_home_dir }}
-  when: item.url is defined
-  with_items: logstash_plugins
-  ignore_errors: yes
+  ignore_errors: no
 # Fix permissions
 #- file: >
 #    path="{{ logstash_plugin_dir }}" state=directory
