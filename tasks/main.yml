@@ -13,7 +13,7 @@
 
 - include: logstash_configuration.yml
   tags:
-   - logstash_conf
+   - logstash_config
 # Install Other Generic Plugins
 - include: plugins.yml
   tags:
