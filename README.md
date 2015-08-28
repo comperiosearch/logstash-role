@@ -3,8 +3,6 @@ Role Name
 
 Ansible Role to Install and Configure Logstash
 
-[![Build Status](https://travis-ci.org/valentinogagliardi/logstash-role.svg?branch=master)](https://travis-ci.org/valentinogagliardi/logstash-role)
-
 Requirements
 ------------
 
@@ -12,19 +10,25 @@ On Debian OS family, **python-pycurl** and **python-apt** are required to deal w
 
 **Java** should be present on the nodes machines in order to run Logstash. This role does not install Java.
 
+Logstash configuration can be set in playbook input, or in a folder with files.
+The files will be run through the templating engine - meaning you can use variables.
+
+
 Example Playbooks
 ----------------
 
 ```yaml
 - hosts: LogstashNodes
   roles:
-    - role: valentinogagliardi.logstash-role
+    - role: logstash-role
 
       logstash_version: "1.5"
 
       logstash_defaults: |
         LS_USER=root
         LS_HEAP_SIZE="256m"
+
+     logstash_config_files: include/logstash
 
      logstash_inputs: |
        syslog { host => "{{ ansible_eth0.ipv4.address }}"
@@ -84,4 +88,4 @@ Author Information
 ------------------
 
 Valentino Gagliardi - valentino.g@servermanaged.it
-
+Christoffer Vig  - christoffer.vig@gmail.com

@@ -1,10 +1,27 @@
 ---
+
+- name:         get the list of templates to transfer
+  local_action: "shell ls {{logstash_config_files}}/* | sed 's~.*/~~g'"
+  register:     template_files
+
 - name: Copy Logstash config files
-  copy: src={{logstash_config_files}} dest={{ logstash_conf_dir }}
+  template: src={{logstash_config_files}}/{{ item }} 
+            dest={{ logstash_conf_dir }}/{{ item }}
+            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+  with_items:
+  - "{{ template_files.stdout.splitlines() }}"
   notify:
    - restart logstash
   tags: logstash_config_files
   when: logstash_config_files is defined
+
+#- name: Copy Logstash config files
+##  copy: src={{logstash_config_files}} dest={{ logstash_conf_dir }}
+#  notify:
+##   - restart logstash
+#  tags: logstash_config_files
+#  when: logstash_config_files is defined
+
 
 - name: Copy Logstash Input Configuration
   template: src=input.conf.j2
@@ -12,6 +29,7 @@
             owner=root 
             group=root 
             mode=0644
+            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   notify:
    - restart logstash
   tags: logstash_inputs
@@ -23,6 +41,7 @@
             owner=root 
             group=root 
             mode=0644
+            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   notify:
    - restart logstash
   tags: logstash_filters
@@ -34,6 +53,7 @@
             owner=root 
             group=root 
             mode=0644
+            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   notify:
    - restart logstash
   tags: logstash_outputs
