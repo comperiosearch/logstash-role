@@ -1,31 +1,41 @@
 ---
+- name: Copy Logstash config files
+  copy: src={{logstash_config_files}} dest={{ logstash_conf_dir }}
+  notify:
+   - restart logstash
+  tags: logstash_config_files
+  when: logstash_config_files is defined
+
 - name: Copy Logstash Input Configuration
   template: src=input.conf.j2
-            dest={{ logstash_conf_dir }}input.conf
+            dest={{ logstash_conf_dir }}00-input.conf
             owner=root 
             group=root 
             mode=0644
   notify:
    - restart logstash
   tags: logstash_inputs
+  when: logstash_inputs is defined
 
 - name: Copy Logstash Filter Configuration
   template: src=filters.conf.j2
-            dest={{ logstash_conf_dir }}filters.conf
+            dest={{ logstash_conf_dir }}51-filters.conf
             owner=root 
             group=root 
             mode=0644
   notify:
    - restart logstash
   tags: logstash_filters
+  when: logstash_filters is defined
 
 - name: Copy Logstash Output Configuration
   template: src=output.conf.j2
-            dest={{ logstash_conf_dir }}output.conf
+            dest={{ logstash_conf_dir }}99-output.conf
             owner=root 
             group=root 
             mode=0644
   notify:
    - restart logstash
   tags: logstash_outputs
+  when: logstash_outputs is defined
 
