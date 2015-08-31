@@ -1,7 +1,8 @@
 ---
-
+#TODO should delete all existing configs -but only if successful valitation....
 - name:         get the list of templates to transfer
   local_action: "shell ls {{logstash_config_files}}/* | sed 's~.*/~~g'"
+  tags: logstash_config_files
   register:     template_files
 
 - name: Copy Logstash config files
@@ -14,14 +15,7 @@
    - restart logstash
   tags: logstash_config_files
   when: logstash_config_files is defined
-
-#- name: Copy Logstash config files
-##  copy: src={{logstash_config_files}} dest={{ logstash_conf_dir }}
-#  notify:
-##   - restart logstash
-#  tags: logstash_config_files
-#  when: logstash_config_files is defined
-
+ 
 
 - name: Copy Logstash Input Configuration
   template: src=input.conf.j2
