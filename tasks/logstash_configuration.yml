@@ -1,77 +1,44 @@
 ---
-#TODO should delete all existing configs -but only if successful valitation....
-- name:         get the list of input templates to transfer
-  local_action: "shell ls {{logstash_config_files_input}}/* | sed 's~.*/~~g'"
-  tags: logstash_config_files
-  register:     template_files_input
 
-- name:         get the list of filter templates to transfer
-  local_action: "shell ls {{logstash_config_files_filter}}/* | sed 's~.*/~~g'"
+#- name:         get the list of Logstash templates to transfer
+#  local_action: "shell ls {{item}}/* | sed 's~.*/~~g'"
+#  tags: logstash_config_files
+#  register:     template_files_Logstash
+#  with_items: logstash_config_files
+- name: debug items
+  debug: var=item
   tags: logstash_config_files
-  register:     template_files_filter
-
-- name:         get the list of output templates to transfer
-  local_action: "shell ls {{logstash_config_files_output}}/* | sed 's~.*/~~g'"
-  tags: logstash_config_files
-  register:     template_files_output
-
-- name: Copy Logstash input config files
-  template: src={{logstash_config_files_input}}/{{ item }} 
-            dest={{ logstash_conf_dir }}/{{ item }}
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+  with_fileglob:
+    - "{{ item }}/*"
   with_items:
-  - "{{ template_files_input.stdout.splitlines() }}"
+    - "{{ logstash_config_files }}"
+
+- name: Copy Logstash template config files
+  template: src={{ item }}
+            dest={{ logstash_conf_dir }}/
+            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+  register: template_files_Logstash
+  with_fileglob:
+    - "{{ item }}/*"
+  with_items:
+    - "{{ logstash_config_files }}"
   notify:
    - restart logstash
   tags: logstash_config_files
-  when: logstash_config_files_input is defined
-
-
-
-- name: Copy Logstash filter config files
-  template: src={{logstash_config_files_filter}}/{{ item }} 
-            dest={{ logstash_conf_dir }}/{{ item }}
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
-  with_items:
-  - "{{ template_files_filter.stdout.splitlines() }}"
-  notify:
-   - restart logstash
-  tags: logstash_config_files
-  when: logstash_config_files_filter is defined
-
-
-  
-- name: Copy Logstash output config files
-  template: src={{logstash_config_files_output}}/{{ item }} 
-            dest={{ logstash_conf_dir }}/{{ item }}
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
-  with_items:
-  - "{{ template_files_output.stdout.splitlines() }}"
-  notify:
-   - restart logstash
-  tags: logstash_config_files
-  when: logstash_config_files_output is defined
-
-
-  
-
+  when: logstash_config_files is defined
 
  # cLEAN AND DELETE UNMANGED FILES
 
 - shell: ls -1 {{ logstash_conf_dir }}
   register: logstash_conf_contents
   tags: logstash_config_files
-   
-- debug: var=(template_files_input.stdout.splitlines() + template_files_filter.stdout.splitlines() + template_files_output.stdout.splitlines())
-  tags: logstash_config_files
- 
 - name: Removing unmanaged files from logstash config dir
   file: path={{ logstash_conf_dir }}/{{ item }} state=absent
 #  debug: msg="Removing {{ item }}"
   with_items: logstash_conf_contents.stdout_lines
-  when: item not in (template_files_input.stdout.splitlines() + template_files_filter.stdout.splitlines() + template_files_output.stdout.splitlines() + ["00-ansible-gen-input.conf" ,"51-ansible-gen-filters.conf", "99-ansible-gen-output.conf" ])
+  when: item not in (template_files_Logstash + ["00-ansible-gen-input.conf" ,"51-ansible-gen-filters.conf", "99-ansible-gen-output.conf" ])
   tags: logstash_config_files
- 
+
 - name: Copy Logstash Input Configuration
   template: src=input.conf.j2
             dest={{ logstash_conf_dir }}00-ansible-gen-input.conf
