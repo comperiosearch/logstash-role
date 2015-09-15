@@ -10,12 +10,12 @@
 
 - include: logstash_installation_RedHat.yml
   when: ansible_os_family == "RedHat"
-
-- include: logstash_configuration.yml
-  tags:
-   - logstash_config
 # Install Other Generic Plugins
 - include: plugins.yml
   tags:
    - logstash_plugins
   when: (logstash_plugins is defined)
+
+- include: logstash_configuration.yml
+  tags:
+   - logstash_config
