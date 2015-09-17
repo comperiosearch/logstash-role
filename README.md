@@ -1,7 +1,6 @@
-Role Name
+Ansible Role to Install and Configure Logstash
 =========
 
-Ansible Role to Install and Configure Logstash
 
 Requirements
 ------------
@@ -78,6 +77,51 @@ logstash_defaults:
 defaults_RedHat: "/etc/sysconfig/logstash"
 defaults_Debian: "/etc/default/logstash"
 ```
+
+
+
+
+## Include role in a larger playbook
+### Add this role as a git submodule
+Assuming your playbook structure is such as:
+```
+- my-master-playbook
+  |- vars
+  |- roles
+  |- my-master-playbook-main.yml
+  \- my-master-inventory.ini
+```
+
+Checkout this project as a submodule under roles:
+
+```
+$  cd roles
+$  git submodule add https://github.com/comperiosearch/logstash-role.git ./logstash
+$  git submodule update --init
+$  git commit ./submodule -m "Added submodule as ./subm"
+```
+
+### Include this playbook as a role in your master playbook
+Example `my-master-playbook-main.yml`:
+
+```
+---
+
+#########################
+# Elasticsearch install #
+#########################
+
+- hosts: all_nodes
+  user: ubuntu
+  sudo: yes
+
+  roles:
+    - logstash
+
+  vars_files:
+    - vars/my-vars.yml
+```
+
 
 License
 -------
