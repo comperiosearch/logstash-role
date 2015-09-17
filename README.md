@@ -108,7 +108,7 @@ Example `my-master-playbook-main.yml`:
 ---
 
 #########################
-# Elasticsearch install #
+# Logstash install #
 #########################
 
 - hosts: all_nodes
