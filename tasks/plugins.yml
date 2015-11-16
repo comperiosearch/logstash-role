@@ -11,8 +11,3 @@
     chdir="{{ logstash_home_dir }}"
   with_items: logstash_plugins
   ignore_errors: no
-# Fix permissions
-#- file: >
-#    path="{{ logstash_plugin_dir }}" state=directory
-#    owner={{ logstash_user }} group={{ logstash_group }}
-#    recurse=yes
