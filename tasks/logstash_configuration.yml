@@ -59,16 +59,16 @@
 
  # cLEAN AND DELETE UNMANGED FILES
 
-- shell: ls -1 {{ logstash_conf_dir }}
-  register: logstash_conf_contents
-  tags: logstash_config_files
+# - shell: ls -1 {{ logstash_conf_dir }}
+#   register: logstash_conf_contents
+#   tags: logstash_config_files
 
-- name: Removing unmanaged files from logstash config dir
-  file: path={{ logstash_conf_dir }}/{{ item }} state=absent
-  with_items: logstash_conf_contents.stdout_lines
-  when: item not in (( template_files_input.stdout.splitlines() + template_files_filter.stdout.splitlines() + template_files_output.stdout.splitlines()) + ["00-ansible-gen-input.conf" ,"51-ansible-gen-filters.conf", "99-ansible-gen-output.conf" ])
-  tags: logstash_config_files
-  when: (logstash_config_files_input is defined or logstash_config_files_filter is defined  or logstash_config_files_output is defined )
+# - name: Removing unmanaged files from logstash config dir
+#   file: path={{ logstash_conf_dir }}/{{ item }} state=absent
+#   with_items: logstash_conf_contents.stdout_lines
+#   when: item not in (( template_files_input.stdout.splitlines() + template_files_filter.stdout.splitlines() + template_files_output.stdout.splitlines()) + ["00-ansible-gen-input.conf" ,"51-ansible-gen-filters.conf", "99-ansible-gen-output.conf" ])
+#   tags: logstash_config_files
+#   when: (logstash_config_files_input is defined or logstash_config_files_filter is defined  or logstash_config_files_output is defined )
 
 - name: Copy Logstash Input Configuration
   template: src=input.conf.j2
