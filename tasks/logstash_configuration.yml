@@ -23,7 +23,7 @@
             dest={{ logstash_conf_dir }}/{{ item }}
             validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   with_items:
-  - "{{ template_files_input.stdout.splitlines() }}"
+  - "{{ (template_files_input.stdout | default()).splitlines() }}"
   notify:
    - restart logstash
   tags: logstash_config_files
@@ -36,7 +36,7 @@
             dest={{ logstash_conf_dir }}/{{ item }}
             validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   with_items:
-  - "{{ template_files_filter.stdout.splitlines() }}"
+  - "{{ (template_files_filter.stdout | default()).splitlines() }}"
   notify:
    - restart logstash
   tags: logstash_config_files
@@ -49,7 +49,7 @@
             dest={{ logstash_conf_dir }}/{{ item }}
             validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   with_items:
-  - "{{ template_files_output.stdout.splitlines() }}"
+  - "{{ (template_files_output.stdout | default()).splitlines() }}"
   notify:
    - restart logstash
   tags: logstash_config_files
