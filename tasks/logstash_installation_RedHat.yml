@@ -1,11 +1,11 @@
 ---
 - name: Enable Logstash repository
-  template: src=logstash_repo.j2 
+  template: src=logstash_repo.j2
             dest={{ logstash_yum_repo_dest }}
   tags: logstash_repo
 
 - name: Add Logstash Repo Key
-  rpm_key: key="{{ logstash_repo_key }}" 
+  rpm_key: key="{{ logstash_repo_key }}"
            state=present
   tags: logstash_repo
 

@@ -6,7 +6,7 @@
       logstash_defaults: |
         LS_USER=root
         LS_HEAP_SIZE="256m"
-      
+
       logstash_inputs: |
         file {
               path => "/var/log/auth.log"
