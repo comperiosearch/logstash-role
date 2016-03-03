@@ -19,9 +19,9 @@
   when: logstash_config_files_output is defined
 
 - name: Copy Logstash input config files
-  template: src={{logstash_config_files_input}}/{{ item }} 
+  template: src={{logstash_config_files_input}}/{{ item }}
             dest={{ logstash_conf_dir }}/{{ item }}
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+            #validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   with_items:
   - "{{ template_files_input.stdout.splitlines() }}"
   notify:
@@ -32,9 +32,9 @@
 
 
 - name: Copy Logstash filter config files
-  template: src={{logstash_config_files_filter}}/{{ item }} 
+  template: src={{logstash_config_files_filter}}/{{ item }}
             dest={{ logstash_conf_dir }}/{{ item }}
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+            #validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   with_items:
   - "{{ template_files_filter.stdout.splitlines() }}"
   notify:
@@ -47,7 +47,7 @@
 - name: Copy Logstash output config files
   template: src={{logstash_config_files_output}}/{{ item }}
             dest={{ logstash_conf_dir }}/{{ item }}
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+            #validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   with_items:
   - "{{ template_files_output.stdout.splitlines() }}"
   notify:
@@ -76,7 +76,7 @@
             owner=root
             group=root
             mode=0644
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+            #validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   notify:
    - restart logstash
   tags: logstash_inputs
@@ -85,10 +85,10 @@
 - name: Copy Logstash Filter Configuration
   template: src=filters.conf.j2
             dest={{ logstash_conf_dir }}51-ansible-gen-filters.conf
-            owner=root 
-            group=root 
+            owner=root
+            group=root
             mode=0644
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+            #validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   notify:
    - restart logstash
   tags: logstash_filters
@@ -97,12 +97,11 @@
 - name: Copy Logstash Output Configuration
   template: src=output.conf.j2
             dest={{ logstash_conf_dir }}99-ansible-gen-output.conf
-            owner=root 
-            group=root 
+            owner=root
+            group=root
             mode=0644
-            validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
+            #validate="{{ logstash_home_dir }}/bin/logstash agent -t -f %s"
   notify:
    - restart logstash
   tags: logstash_outputs
   when: logstash_outputs is defined
-
