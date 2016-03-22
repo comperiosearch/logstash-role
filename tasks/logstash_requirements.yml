@@ -1,7 +1,7 @@
 ---
 - name: Install Python utils on Debian OS Family
-  apt: pkg={{ item.package }} 
-       update_cache=yes 
+  apt: pkg={{ item.package }}
+       update_cache=yes
        state=latest
   with_items: logstash_python_utils
   when: ansible_os_family == "Debian"

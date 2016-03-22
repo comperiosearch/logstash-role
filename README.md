@@ -41,9 +41,9 @@ Example Playbooks
               }
 
      logstash_filters: |
-       geoip { source => "ip_address" 
+       geoip { source => "ip_address"
              }
- 
+
        multiline { pattern => "^No lfn2pfn"
                    what => "previous"
                  }
@@ -71,7 +71,7 @@ logstash_yum_repo_dest: "/etc/yum.repos.d/logstash.repo"
 
 logstash_conf_dir: "/etc/logstash/conf.d/"
 
-logstash_defaults: 
+logstash_defaults:
  - { directive: "LS_USER=logstash" }
 
 defaults_RedHat: "/etc/sysconfig/logstash"
